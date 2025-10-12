@@ -1,13 +1,13 @@
-import psycopg2
-from datetime import datetime
-from .models import UserCreate
 import os
+import psycopg2
 from dotenv import load_dotenv
-
+from .model import AddFood
 load_dotenv()
 
 database_url = os.getenv('DATABASE_URL')
-def create_user(user: UserCreate) :
+
+
+def add_food(food: AddFood) :
     try:
 
         conn = psycopg2.connect(database_url)
@@ -15,15 +15,18 @@ def create_user(user: UserCreate) :
         
 
         insert_query = """
-        INSERT INTO users(first_name,last_name,date_of_birth,email,gender)
-        VALUES(%s,%s,%s,%s,%s)
+        INSERT INTO food(user_id,food_name,is_solid,calories_100,protein_100,carbs_100,fats_100)
+
+        VALUES(%s,%s,%s,%s,%s,%s,%s)
         """
         data_to_insert = (
-            user.first_name,
-            user.last_name,
-            user.date_of_birth.isoformat(),
-            user.email,
-            user.gender,
+            food.user_id,
+            food.food_name,
+            food.is_solid,
+            food.calories_100,
+            food.protein_100,
+            food.carbs_100,
+            food.fats_100
         )
         cur.execute(insert_query,data_to_insert)
         conn.commit()
@@ -41,34 +44,27 @@ def create_user(user: UserCreate) :
             conn.close()
 
 
-
-def get_user_emails(email:str):
+def get_all_food():
     try:
-
         conn = psycopg2.connect(database_url)
         cur = conn.cursor()
-        
 
-        query = """
-        SELECT email
-        FROM users
-        WHERE email = %s
+        read_query = """
+        SELECT DISTINCT(food_name), calories_100
+        FROM food
         """
-        data_to_insert = [email]
-        
-        cur.execute(query,data_to_insert)
+        cur.execute(read_query)
         results = cur.fetchall()
-        cur.close()
-        conn.close()
-        email_list = [row[0] for row in results]  
-        return email_list
+
+        return results
+
 
     except Exception as e:
         print(f"Error: {e}")
+        return []
 
     finally:
         if cur:
             cur.close()
         if conn:
-            conn.close()
-
+            conn.close() 

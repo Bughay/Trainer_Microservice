@@ -13,23 +13,16 @@ router = APIRouter()
     description="Create a new user profile with personal information",
 )
 async def create_user_endpoint(user:UserCreate):
-    ### check if user already exists script
     existing_emails = get_user_emails(user.email)
-    print(existing_emails)
-    if user.email in existing_emails:
+    if len(existing_emails) > 0:
+
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,  
             detail="Email already registered"
         )
-    ### check if user already exists script
     try:
-        create_user(
-            first_name = user.first_name,
-            last_name = user.last_name,
-            date_of_birth=user.date_of_birth,
-            email = user.email,
-            gender = user.gender
-        )
+        create_user(user)
+
 
         response = UserResponse(
             first_name=user.first_name,
@@ -37,8 +30,8 @@ async def create_user_endpoint(user:UserCreate):
             date_of_birth=user.date_of_birth,
             email = user.email,
             gender = user.gender,
-            created_at = datetime.now(),
-            last_updated= datetime.now()
+
+
 
         )
         

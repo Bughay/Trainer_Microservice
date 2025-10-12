@@ -7,7 +7,9 @@ class UserCreate(BaseModel):
     email: str
     gender: bool
     
-
+    @field_validator('email')
+    def email_to_lowercase(cls,v:str) -> str:
+        return v.lower()
 
 
 
@@ -19,8 +21,7 @@ class UserResponse(BaseModel):
     date_of_birth: PastDate
     email: str
     gender: bool
-    created_at: datetime
-    last_updated: datetime
+
 
 
 

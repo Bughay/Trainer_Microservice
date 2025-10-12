@@ -3,11 +3,11 @@ CREATE TABLE users (
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
     date_of_birth DATE NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    last_updated TIMESTAMP NOT NULL,
     email VARCHAR(255) NOT NULL,
     gender BOOLEAN,
-    body_weight INTEGER
+    body_weight INTEGER,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE food (
@@ -19,7 +19,8 @@ CREATE TABLE food (
     protein_100 DECIMAL NOT NULL,
     carbs_100 DECIMAL NOT NULL,
     fats_100 DECIMAL NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE recipes (
@@ -27,8 +28,8 @@ CREATE TABLE recipes (
     user_id INTEGER REFERENCES users(user_id),
     recipe_name VARCHAR(255) NOT NULL,
     instructions TEXT,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE recipe_ingredients (
@@ -36,7 +37,8 @@ CREATE TABLE recipe_ingredients (
     recipe_id INTEGER NOT NULL REFERENCES recipes(recipe_id),
     food_id INTEGER NOT NULL REFERENCES food(food_id),
     total_grams DECIMAL NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE food_entries (
@@ -49,5 +51,6 @@ CREATE TABLE food_entries (
     protein DECIMAL NOT NULL,
     carbs DECIMAL NOT NULL,
     fats DECIMAL NOT NULL,
-    created_at TIMESTAMP NOT NULL
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
