@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
-from .model import AddFood, FoodItem
-from .database import add_food, get_all_food
+from .model import AddFood, FoodItem,LogFood,ResponseLogFood
+from .database import add_food, get_all_food,log_food
 
 router = APIRouter()
 
@@ -69,3 +69,22 @@ async def get_all_food_endpoint():
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error creating food item: {str(e)}"
         )
+
+
+@router.post(
+    "/food/entry",
+    response_model=ResponseLogFood,
+    status_code = status.HTTP_201_CREATED,
+    summary="Log food",
+    description="Logs the food and Create a new food item for the database",
+)
+
+async def log_food_endpoint(item:LogFood):
+    answer = log_food(item)
+    print(answer)
+    response = ResponseLogFood(
+        food_logged=item,
+        food_saved_db=answer
+    )
+    print(response)
+    return response

@@ -14,6 +14,25 @@ class AddFood(BaseModel):
     fats_100: float
 
 
+class LogFood(BaseModel):
+    user_id:int
+    food_name:str
+    total_calories:float
+    total_grams:float
+    total_protein: float
+    total_carbs: float
+    total_fats: float
+
+
+class ResponseLogFood(BaseModel):
+    food_logged:LogFood
+    food_saved_db:AddFood
+
+
+
+
+
+
 
 
 

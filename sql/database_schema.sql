@@ -23,6 +23,19 @@ CREATE TABLE food (
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE food_Cache (
+    food_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
+    food_name VARCHAR(255) NOT NULL,
+    is_solid BOOLEAN,
+    calories_100 DECIMAL NOT NULL,
+    protein_100 DECIMAL NOT NULL,
+    carbs_100 DECIMAL NOT NULL,
+    fats_100 DECIMAL NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE recipes (
     recipe_id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(user_id),
