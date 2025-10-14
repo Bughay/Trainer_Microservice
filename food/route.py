@@ -1,21 +1,41 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 from .model import AddFood, FoodItem,LogFood,ResponseLogFood
-from .database import add_food, get_all_food,log_food
+from .database import add_food, get_all_food,log_food,get_food_by_user
 
 router = APIRouter()
 
+
 @router.post(
-    "/food",
+    "/food/log_food/{user_id}",
+    response_model=ResponseLogFood,
+    status_code = status.HTTP_201_CREATED,
+    summary="Log food",
+    description="Logs the food and Create a new food item for the database",
+)
+
+async def log_food_endpoint(item:LogFood,user_id:int):
+    answer = log_food(item,user_id)
+    print(answer)
+    response = ResponseLogFood(
+        food_logged=item,
+        food_saved_db=answer
+    )
+    return response
+
+
+
+@router.post(
+    "/food/create_food/{user_id}",
     response_model=AddFood,
     status_code = status.HTTP_201_CREATED,
     summary="Create a new food item",
     description="Create a new food item for the database",
 )
 
-async def create_food_endpoint(food: AddFood):
+async def create_food_endpoint(food: AddFood,user_id:int):
     try:
-        all_food = get_all_food() 
+        all_food = get_food_by_user(user_id) 
         
         existing_food_names = [item[0] for item in all_food] 
         
@@ -25,7 +45,7 @@ async def create_food_endpoint(food: AddFood):
                 detail=f"Food '{food.food_name}' already exists in database"
             )
         else:
-            add_food(food)
+            add_food(food,user_id)
             return food
 
     except HTTPException:
@@ -41,6 +61,7 @@ async def create_food_endpoint(food: AddFood):
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error creating food item: {str(e)}"
         )
+
     
 @router.get(
     "/food",
@@ -53,7 +74,37 @@ async def create_food_endpoint(food: AddFood):
 async def get_all_food_endpoint():
     try:
         all_food = get_all_food()
-        print(all_food)
+        food_list = []
+        for food_name, calories in all_food:
+            food_list.append(FoodItem(
+                food_name=food_name,
+                calories_100=float(calories)
+            ))
+        
+        return food_list
+        
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error creating food item: {str(e)}"
+        )
+    
+
+
+@router.get(
+    "/food/{user_id}",
+    response_model=List[FoodItem],
+    status_code = status.HTTP_201_CREATED,
+    summary="get all food items of the user",
+    description="view your saved foods of the user",
+)
+
+async def get_users_food_endpoint(
+    user_id:int
+):
+    try:
+        all_food = get_food_by_user(user_id)
         food_list = []
         for food_name, calories in all_food:
             food_list.append(FoodItem(
@@ -70,21 +121,7 @@ async def get_all_food_endpoint():
             detail=f"Error creating food item: {str(e)}"
         )
 
+    
 
-@router.post(
-    "/food/entry",
-    response_model=ResponseLogFood,
-    status_code = status.HTTP_201_CREATED,
-    summary="Log food",
-    description="Logs the food and Create a new food item for the database",
-)
 
-async def log_food_endpoint(item:LogFood):
-    answer = log_food(item)
-    print(answer)
-    response = ResponseLogFood(
-        food_logged=item,
-        food_saved_db=answer
-    )
-    print(response)
-    return response
+

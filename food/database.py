@@ -1,13 +1,13 @@
 import os
 import psycopg2
 from dotenv import load_dotenv
-from .model import AddFood,LogFood
+from .model import AddFood,LogFood, ResponseAddFood
 load_dotenv()
 
 database_url = os.getenv('DATABASE_URL')
 
 
-def add_food(food: AddFood) :
+def add_food(food: AddFood,user_id:int) :
     try:
 
         conn = psycopg2.connect(database_url)
@@ -20,7 +20,7 @@ def add_food(food: AddFood) :
         VALUES(%s,%s,%s,%s,%s,%s,%s)
         """
         data_to_insert = (
-            food.user_id,
+            user_id,
             food.food_name,
             food.is_solid,
             food.calories_100,
@@ -70,7 +70,7 @@ def get_all_food():
             conn.close()
 
 
-def log_food(food:LogFood,user_id=1):
+def log_food(food:LogFood,user_id):
     try:
 
         conn = psycopg2.connect(database_url)
@@ -81,7 +81,7 @@ def log_food(food:LogFood,user_id=1):
         fats_100 = (food.total_fats / food.total_grams) * 100 
 
         insert_query = """
-        INSERT INTO food(user_id,food_name,is_solid,calories_100,protein_100,carbs_100,fats_100)
+        INSERT INTO food_Cache(user_id,food_name,is_solid,calories_100,protein_100,carbs_100,fats_100)
 
         VALUES(%s,%s,%s,%s,%s,%s,%s)
         RETURNING food_id
@@ -120,8 +120,7 @@ def log_food(food:LogFood,user_id=1):
         cur.execute(insert_query_2,data_to_insert_2)
         
         conn.commit()
-
-        return AddFood(
+        response = ResponseAddFood(
             user_id=user_id,
             food_name=food.food_name,
             is_solid=True,
@@ -130,6 +129,8 @@ def log_food(food:LogFood,user_id=1):
             carbs_100=carbs_100,
             fats_100=fats_100
         )
+        print('here is the response', response)
+        return response
         
 
 
@@ -137,6 +138,35 @@ def log_food(food:LogFood,user_id=1):
         if conn:
             conn.rollback()
         print(f"Error: {e}")
+
+    finally:
+        if cur:
+            cur.close()
+        if conn:
+            conn.close()
+
+
+def get_food_by_user(user_id:int):
+    try:
+        conn = psycopg2.connect(database_url)
+        cur = conn.cursor()
+
+        read_query = """
+        SELECT DISTINCT(food_name), calories_100
+        FROM food
+        WHERE user_id = %s
+        """
+
+        query_parameters = (user_id,)
+        cur.execute(read_query,query_parameters)
+        results = cur.fetchall()
+
+        return results
+
+
+    except Exception as e:
+        print(f"Error: {e}")
+        return []
 
     finally:
         if cur:

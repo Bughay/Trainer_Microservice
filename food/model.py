@@ -5,7 +5,6 @@ class FoodItem(BaseModel):
     calories_100: float
 
 class AddFood(BaseModel):
-    user_id:int
     food_name: str
     is_solid: bool
     calories_100: float
@@ -15,7 +14,6 @@ class AddFood(BaseModel):
 
 
 class LogFood(BaseModel):
-    user_id:int
     food_name:str
     total_calories:float
     total_grams:float
@@ -23,10 +21,18 @@ class LogFood(BaseModel):
     total_carbs: float
     total_fats: float
 
-
+class ResponseAddFood(BaseModel):
+    user_id: int
+    food_name: str
+    is_solid: bool
+    calories_100: float
+    protein_100: float
+    carbs_100: float
+    fats_100: float
+    
 class ResponseLogFood(BaseModel):
     food_logged:LogFood
-    food_saved_db:AddFood
+    food_saved_db:ResponseAddFood
 
 
 
