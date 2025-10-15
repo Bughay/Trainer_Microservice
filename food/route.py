@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, status, Depends
+from fastapi import APIRouter, HTTPException, status
 from typing import List
 from .model import AddFood, FoodItem,LogFood,ResponseLogFood
 from .database import add_food, get_all_food,log_food,get_food_by_user
@@ -13,7 +13,6 @@ router = APIRouter()
     summary="Log food",
     description="Logs the food and Create a new food item for the database",
 )
-
 async def log_food_endpoint(item:LogFood,user_id:int):
     answer = log_food(item,user_id)
     print(answer)

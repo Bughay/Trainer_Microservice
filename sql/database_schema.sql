@@ -67,3 +67,37 @@ CREATE TABLE food_entries (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+
+
+CREATE TABLE training_routine (
+    routine_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    training_routine_name VARCHAR(255),
+    notes VARCHAR(255)
+);
+
+CREATE TABLE training (
+    training_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ,
+    routine_id INTEGER REFERENCES training_routine(routine_id),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    exercise_name VARCHAR(255),
+    weight_ DECIMAL NOT NULL,
+    reps INTEGER NOT NULL,
+    notes VARCHAR(255)
+);
+
+CREATE TABLE training_ingredients (
+    training_entry_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id),
+    routine_id INTEGER REFERENCES training_routine(routine_id),
+    exercise_name VARCHAR(255),
+    weight_ DECIMAL NOT NULL,
+    sets_ INTEGER NOT NULL,
+    reps INTEGER NOT NULL,
+    notes VARCHAR(255)
+);
