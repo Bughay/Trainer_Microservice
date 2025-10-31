@@ -9,5 +9,7 @@ app.include_router(food_router)
 app.include_router(training_router)
 
 
-
+@app.get("/")
+def root():
+    return {"message": "Ego Nutrition API is running!"}
 

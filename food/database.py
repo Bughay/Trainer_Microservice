@@ -81,7 +81,7 @@ def log_food(food:LogFood,user_id):
         fats_100 = (food.total_fats / food.total_grams) * 100 
 
         insert_query = """
-        INSERT INTO food_Cache(user_id,food_name,is_solid,calories_100,protein_100,carbs_100,fats_100)
+        INSERT INTO food(user_id,food_name,is_solid,calories_100,protein_100,carbs_100,fats_100)
 
         VALUES(%s,%s,%s,%s,%s,%s,%s)
         RETURNING food_id
