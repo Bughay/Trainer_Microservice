@@ -23,6 +23,19 @@ CREATE TABLE food (
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE food_Cache (
+    food_id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(user_id),
+    food_name VARCHAR(255) NOT NULL,
+    is_solid BOOLEAN,
+    calories_100 DECIMAL NOT NULL,
+    protein_100 DECIMAL NOT NULL,
+    carbs_100 DECIMAL NOT NULL,
+    fats_100 DECIMAL NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE recipes (
     recipe_id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(user_id),
@@ -53,4 +66,38 @@ CREATE TABLE food_entries (
     fats DECIMAL NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE training_routine (
+    routine_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    training_routine_name VARCHAR(255),
+    notes VARCHAR(255)
+);
+
+CREATE TABLE training (
+    training_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id) ,
+    routine_id INTEGER REFERENCES training_routine(routine_id),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    exercise_name VARCHAR(255),
+    weight_ DECIMAL NOT NULL,
+    reps INTEGER NOT NULL,
+    notes VARCHAR(255)
+);
+
+CREATE TABLE training_ingredients (
+    training_entry_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL REFERENCES users(user_id),
+    routine_id INTEGER REFERENCES training_routine(routine_id),
+    exercise_name VARCHAR(255),
+    weight_ DECIMAL NOT NULL,
+    sets_ INTEGER NOT NULL,
+    reps INTEGER NOT NULL,
+    notes VARCHAR(255)
 );
