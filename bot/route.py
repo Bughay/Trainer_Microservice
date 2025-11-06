@@ -1,41 +1,20 @@
-from fastapi import APIRouter, HTTPException, status
-from typing import List
-
-
+from fastapi import APIRouter
+import requests
+from bot.services import workflow
 router = APIRouter()
 
-
-@router.post(
-    "/food/log_food/{user_id}",
-    response_model=ResponseLogFood,
-    status_code = status.HTTP_201_CREATED,
-    summary="Log food",
-    description="Logs the food and Create a new food item for the database",
-)
-async def log_food_endpoint(item:LogFood,user_id:int):
-    answer = log_food(item,user_id)
-    print(answer)
-    response = ResponseLogFood(
-        food_logged=item,
-        food_saved_db=answer
+@router.post("/bot")
+async def bot_endpoint(user_id: int, user_message: str):
+    # Call your existing log_food endpoint
+    reply = workflow(user_message)
+    print(reply)
+    user_id = 1
+    response = requests.post(
+        f"http://localhost:8000/food/log_food/{user_id}",
+        json={"user_message": user_message}
     )
-    return response
-
-
-from fastapi import APIRouter, HTTPException, status
-from typing import List
-from .model import AddFood, FoodItem,LogFood,ResponseLogFood
-from .database import add_food, get_all_food,log_food,get_food_by_user
-
-router = APIRouter()
-
-
-@router.post(
-    "/bot/{user_id}",
-    status_code = status.HTTP_201_CREATED,
-    summary="Log food",
-    description="Logs the food and Create a new food item for the database",
-)
-async def log_food_endpoint(message,user_id:int):
-    pass
-
+    
+    return {
+            "workflow_reply": reply,
+            "food_log_response": response.json()
+        }
