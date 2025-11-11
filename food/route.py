@@ -1,19 +1,20 @@
-from fastapi import APIRouter, HTTPException, status
+from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 from .model import AddFood, FoodItem,LogFood,ResponseLogFood
 from .database import add_food, get_all_food,log_food,get_food_by_user
-
-router = APIRouter()
+from auth.security import get_current_user 
+router = APIRouter(prefix="/food", tags=["food"])
 
 
 @router.post(
-    "/food/log_food/{user_id}",
+    "/food/log_food/log",
     response_model=ResponseLogFood,
     status_code = status.HTTP_201_CREATED,
     summary="Log food",
     description="Logs the food and Create a new food item for the database",
 )
-async def log_food_endpoint(item:LogFood,user_id:int):
+async def log_food_endpoint(item:LogFood,current_user: dict = Depends(get_current_user) ):
+    user_id = current_user['user_id']
     answer = log_food(item,user_id)
     print(answer)
     response = ResponseLogFood(
@@ -25,15 +26,16 @@ async def log_food_endpoint(item:LogFood,user_id:int):
 
 
 @router.post(
-    "/food/create_food/{user_id}",
+    "/food/create_food/log",
     response_model=AddFood,
     status_code = status.HTTP_201_CREATED,
     summary="Create a new food item",
     description="Create a new food item for the database",
 )
 
-async def create_food_endpoint(food: AddFood,user_id:int):
+async def create_food_endpoint(food: AddFood,current_user: dict = Depends(get_current_user)):
     try:
+        user_id = current_user['user_id']
         all_food = get_food_by_user(user_id) 
         
         existing_food_names = [item[0] for item in all_food] 
@@ -92,7 +94,7 @@ async def get_all_food_endpoint():
 
 
 @router.get(
-    "/food/{user_id}",
+    "/food/all_items",
     response_model=List[FoodItem],
     status_code = status.HTTP_201_CREATED,
     summary="get all food items of the user",
@@ -100,9 +102,10 @@ async def get_all_food_endpoint():
 )
 
 async def get_users_food_endpoint(
-    user_id:int
+    current_user: dict = Depends(get_current_user)
 ):
     try:
+        user_id = current_user['user_id']
         all_food = get_food_by_user(user_id)
         food_list = []
         for food_name, calories in all_food:

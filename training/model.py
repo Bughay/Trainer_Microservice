@@ -28,7 +28,6 @@ class TrainingRoutineRequest(BaseModel):
     notes:str
 
 class TrainingRoutineResponse(BaseModel):
-    user_id:str
     training_routine_name:str
     notes:str
 
