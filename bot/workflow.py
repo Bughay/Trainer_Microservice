@@ -62,6 +62,13 @@ def answer_questions(user_message,apikey):
     ### search search  good sites##
     answer = agent.one_shot(user_message)
 
+def create_recipe():
+    ### here the bot needs to find the food items saved in the users portfolio and to create from it
+    pass
+
+def create_training_routine():
+    pass
+
 
             
             
