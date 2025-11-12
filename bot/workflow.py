@@ -58,8 +58,10 @@ system_message= 'you are layne norton and you will answer nutrition and training
 
 def answer_questions(user_message,apikey):
     agent = DeepseekChat(system_message,apikey)
-    ####RAG RAG RAG######
+    ####RAG RAG RAG good sources######
+    ### search search  good sites##
     answer = agent.one_shot(user_message)
+
 
             
             
