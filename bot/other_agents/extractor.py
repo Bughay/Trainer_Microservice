@@ -7,13 +7,11 @@ load_dotenv()
 api_key = os.getenv("DEEPSEEK_API_KEY")
 class DeepseekExtractor:
     def __init__(self,user_message,extraction_schema,example_schema,api_key):
+        self.client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
         self.user_message = user_message
         self.extraction_schema = extraction_schema
         self.example_schema = example_schema
         self.api_key = api_key
-
-
-        self.client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
         self.extraction_prompt = """You will be performing extraction of data from the text as a JSON file using the following schema
                     keep note that the key is the variable and the value is the description
                                         """
@@ -49,4 +47,4 @@ class DeepseekExtractor:
         extracted_data = json.loads(response.choices[0].message.content)
         print('we are testing this function', type(extracted_data))
         return extracted_data
-
+    

@@ -6,7 +6,6 @@ class FoodItem(BaseModel):
 
 class AddFood(BaseModel):
     food_name: str
-    is_solid: bool
     calories_100: float
     protein_100: float
     carbs_100: float
@@ -15,8 +14,8 @@ class AddFood(BaseModel):
 
 class LogFood(BaseModel):
     food_name:str
-    total_calories:float
     total_grams:float
+    total_calories:float
     total_protein: float
     total_carbs: float
     total_fats: float

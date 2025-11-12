@@ -15,14 +15,13 @@ def add_food(food: AddFood,user_id:int) :
         
 
         insert_query = """
-        INSERT INTO food(user_id,food_name,is_solid,calories_100,protein_100,carbs_100,fats_100)
+        INSERT INTO food(user_id,food_name,calories_100,protein_100,carbs_100,fats_100)
 
         VALUES(%s,%s,%s,%s,%s,%s,%s)
         """
         data_to_insert = (
             user_id,
             food.food_name,
-            food.is_solid,
             food.calories_100,
             food.protein_100,
             food.carbs_100,
@@ -97,6 +96,7 @@ def log_food(food:LogFood,user_id):
             carbs_100,
             fats_100,
         )
+        print(data_to_insert, "here should be...")
         cur.execute(insert_query,data_to_insert)
 
         insert_query_2 = """
