@@ -4,7 +4,7 @@ from .other_agents.deepseek import DeepseekChat
 import os
 from dotenv import load_dotenv
 from .personal_trainer.prompts import food_extraction_schema,food_example_schema,classification_examples,training_extraction_schema,training_example_schema
-
+from .model import ResponseLogBot
 import sys
 from pathlib import Path
 
@@ -22,8 +22,6 @@ def log_message(user_message,user_id):
 
     agent_c = ClassificationAgent(api_key,categories=['food','exercise'],examples=classification_examples)
     classification_result = agent_c.classify(user_message)
-    print(classification_result)
-    print(type(classification_result))
     if classification_result == 'food':
 
         extraction_schema = food_extraction_schema
@@ -33,11 +31,11 @@ def log_message(user_message,user_id):
                             example_schema = example_schema,
                             api_key=api_key)
         extracted_list = agent_e.extract()
-        print(extracted_list)
         for item in extracted_list['foods']:
             food_obj = LogFood(**item)
-            log_food(food_obj,1)
-            return "sucess"
+            log_food(food_obj,user_id)
+        response = ResponseLogBot(message='your food has been succesfully added',request_data=extracted_list)
+        return response
     elif classification_result == 'exercise':
         extraction_schema = training_extraction_schema
         example_schema = training_example_schema
@@ -46,12 +44,13 @@ def log_message(user_message,user_id):
                             example_schema = example_schema,
                             api_key=api_key)
         extracted_list = agent_e.extract()
+        print(extracted_list)
+
         for item in extracted_list['trainings']:
             training_obj = LogTrainingRequest(**item)
-            log_training(training_obj,1)
-            print(log_training(training_obj,user_id))
-
-    return "sucess"
+            log_training(training_obj,user_id)
+        response = ResponseLogBot(message='your food has been succesfully added',request_data=extracted_list)
+        return response
 
 
 system_message= 'you are layne norton and you will answer nutrition and training to the best of your ability'
@@ -61,8 +60,9 @@ def answer_questions(user_message,apikey):
     ####RAG RAG RAG good sources######
     ### search search  good sites##
     answer = agent.one_shot(user_message)
+    return answer
 
-def create_recipe():
+def add_food_bot():
     ### here the bot needs to find the food items saved in the users portfolio and to create from it
     pass
 

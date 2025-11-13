@@ -21,6 +21,6 @@ class LogFood(BaseModel):
     total_carbs: float
     total_fats: float
 
-class ResponseLogFoodBot(BaseModel):
+class ResponseLogBot(BaseModel):
     message:str
-    request_data: List[dict]
+    request_data: dict

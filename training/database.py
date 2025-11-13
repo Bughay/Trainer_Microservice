@@ -44,7 +44,6 @@ def log_training(training:LogTrainingRequest,user_id):
 
 
         
-        print(training)
 
         conn.commit()
 
@@ -145,7 +144,6 @@ def view_training(user_id,date_from,date_to):
         cur.execute(insert_query,data_to_insert)
         results = cur.fetchall()
 
-        print("TEST THE RESULTS",results)
 
         return results
 
