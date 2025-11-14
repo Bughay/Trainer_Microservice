@@ -88,5 +88,26 @@ training_example_schema = """
       "notes": "tempo 2-0-2, last rep slow"
     }
   ]
+  ,
+    "trainings": [
+    {
+      "exercise_name": "Barbell Back Squat",
+      "weight": 100.0,
+      "reps": 5,
+      "notes": "RPE 8, felt strong"
+    },
+    {
+      "exercise_name": "Barbell Back Squat",
+      "weight": 90.0,
+      "reps": 5,
+      "notes": "RPE 8, felt strong"
+    },
+    {
+      "exercise_name": "Dumbbell Bench Press",
+      "weight": 30.0,
+      "reps": 10,
+      "notes": "tempo 2-0-2, last rep slow"
+    }
+  ]
 }
 """

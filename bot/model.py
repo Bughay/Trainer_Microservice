@@ -20,7 +20,9 @@ class LogFood(BaseModel):
     total_protein: float
     total_carbs: float
     total_fats: float
-
+    
+class RequestLogBot(BaseModel):
+    message: str
 class ResponseLogBot(BaseModel):
     message:str
     request_data: dict

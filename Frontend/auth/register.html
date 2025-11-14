@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .card {
+            background: #fff;
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,.15);
+            width: 320px;
+        }
+        h2 {
+            margin-top: 0;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 1rem;
+            font-size: .9rem;
+        }
+        input {
+            width: 100%;
+            padding: .5rem;
+            margin-top: .25rem;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            padding: .6rem;
+            background: #0077ff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #005fd1;
+        }
+        .error {
+            color: #e00;
+            font-size: .8rem;
+            margin-top: .25rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>Create account</h2>
+        <form id="registerForm">
+            <label>
+                Username
+                <input name="user_name" required>
+            </label>
+
+            <label>
+                Password
+                <input type="password" name="password" id="pwd" required>
+            </label>
+
+            <label>
+                Repeat password
+                <input type="password" name="repeat_password" id="pwd2" required>
+                <span class="error" id="matchErr"></span>
+            </label>
+
+            <label>
+                Email
+                <input type="email" name="email" required>
+            </label>
+
+            <label>
+                Date of birth
+                <input type="date" name="date_of_birth" required>
+            </label>
+
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('registerForm');
+        const pwd = document.getElementById('pwd');
+        const pwd2 = document.getElementById('pwd2');
+        const matchErr = document.getElementById('matchErr');
+
+        function checkMatch() {
+            if (pwd.value !== pwd2.value) {
+                matchErr.textContent = 'Passwords do not match';
+                return false;
+            }
+            matchErr.textContent = '';
+            return true;
+        }
+        pwd2.addEventListener('input', checkMatch);
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!checkMatch()) return;
+
+            const data = Object.fromEntries(new FormData(form));
+            const res = await fetch('http://localhost:8000/auth/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                alert('Account created!');
+                form.reset();
+            } else {
+                const msg = await res.text();
+                alert('Error: ' + msg);
+            }
+        });
+    </script>
+</body>
+</html>

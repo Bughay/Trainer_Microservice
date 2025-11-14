@@ -2,7 +2,6 @@ from .other_agents.extractor import DeepseekExtractor
 from .other_agents.classification_agent import ClassificationAgent
 from .other_agents.deepseek import DeepseekChat
 import os
-from dotenv import load_dotenv
 from .personal_trainer.prompts import food_extraction_schema,food_example_schema,classification_examples,training_extraction_schema,training_example_schema
 from .model import ResponseLogBot
 import sys
@@ -39,7 +38,7 @@ def log_message(user_message,user_id):
     elif classification_result == 'exercise':
         extraction_schema = training_extraction_schema
         example_schema = training_example_schema
-        agent_e = DeepseekExtractor(user_message=user_message,
+        agent_e = DeepseekExtractor(user_message='KEEP NOTE, EACH SET IS ONE ITEM, SO FOR E.G IF I DID 2 SETS MEANS WE NEED 2 ITEMS IN THE LIST\n'+user_message,
                             extraction_schema=extraction_schema,
                             example_schema = example_schema,
                             api_key=api_key)

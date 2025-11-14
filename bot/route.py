@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status,Depends
 from auth.security import get_current_user 
-from .model import ResponseLogBot
+from .model import ResponseLogBot,RequestLogBot
 from .workflow import log_message
 from pydantic import BaseModel
 
@@ -15,11 +15,14 @@ router = APIRouter(prefix="/agent", tags=["bot"])
     description="AI personal trainer agent that takes an input and then finds the correct python function",
 )
 async def agent(
-    message_request:str,
+    message_request:RequestLogBot,
     current_user:dict=Depends(get_current_user)
     ):
     user_id = current_user['user_id']
-    answer = log_message(message_request,user_id)
-    return answer
+    message = message_request.message
+    answer = log_message(message,user_id)
+    return answer    
+
+
 
     
