@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-
+from database import *
 from food.route import router as food_router
 from training.route import router as training_router
 from bot.route import router as bot_router
@@ -14,12 +14,24 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:5500",
-        "http://127.0.0.1:5500"     # <-- add this line
+
+        "http://127.0.0.1:5500"     
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+
 )
+
+@app.on_event("startup")
+async def startup():
+    await init_db()  
+
+@app.on_event("shutdown") 
+async def shutdown():
+    await close_db()  
+
+
 app.include_router(food_router)
 app.include_router(training_router)
 app.include_router(bot_router)

@@ -14,14 +14,24 @@ router = APIRouter(prefix="/food", tags=["food"])
     description="Logs the food and Create a new food item for the database",
 )
 async def log_food_endpoint(item:LogFood,current_user: dict = Depends(get_current_user) ):
-    user_id = current_user['user_id']
-    answer = log_food(item,user_id)
-    print(answer)
-    response = ResponseLogFood(
-        food_logged=item,
-        food_saved_db=answer
-    )
-    return response
+    try:
+        user_id = current_user['user_id']
+        answer = await log_food(item,user_id)
+        print(answer)
+        response = ResponseLogFood(
+            food_logged=item,
+            food_saved_db=answer
+        )
+        return response
+
+    except HTTPException:
+        raise  
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error creating food item: {str(e)}"
+        )
+
 
 
 
@@ -36,7 +46,7 @@ async def log_food_endpoint(item:LogFood,current_user: dict = Depends(get_curren
 async def create_food_endpoint(food: AddFood,current_user: dict = Depends(get_current_user)):
     try:
         user_id = current_user['user_id']
-        all_food = get_food_by_user(user_id) 
+        all_food = await get_food_by_user(user_id) 
         
         existing_food_names = [item[0] for item in all_food] 
         
@@ -46,7 +56,7 @@ async def create_food_endpoint(food: AddFood,current_user: dict = Depends(get_cu
                 detail=f"Food '{food.food_name}' already exists in database"
             )
         else:
-            add_food(food,user_id)
+            await add_food(food,user_id)
             return food
 
     except HTTPException:
@@ -57,11 +67,7 @@ async def create_food_endpoint(food: AddFood,current_user: dict = Depends(get_cu
             detail=f"Error creating food item: {str(e)}"
         )
 
-    except Exception as e:
-        raise HTTPException(
-            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Error creating food item: {str(e)}"
-        )
+
 
     
 @router.get(
@@ -74,7 +80,7 @@ async def create_food_endpoint(food: AddFood,current_user: dict = Depends(get_cu
 
 async def get_all_food_endpoint():
     try:
-        all_food = get_all_food()
+        all_food = await get_all_food()
         food_list = []
         for food_name, calories in all_food:
             food_list.append(FoodItem(
@@ -106,7 +112,7 @@ async def get_users_food_endpoint(
 ):
     try:
         user_id = current_user['user_id']
-        all_food = get_food_by_user(user_id)
+        all_food = await get_food_by_user(user_id)
         food_list = []
         for food_name, calories in all_food:
             food_list.append(FoodItem(

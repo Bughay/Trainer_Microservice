@@ -21,7 +21,7 @@ async def agent(
     user_id = current_user['user_id']
     message = message_request.message
     answer = log_message(message,user_id)
-    return answer    
+    return answer
 
 
 

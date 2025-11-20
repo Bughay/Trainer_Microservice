@@ -23,7 +23,6 @@ class LogFood(BaseModel):
 class ResponseAddFood(BaseModel):
     user_id: int
     food_name: str
-    is_solid: bool
     calories_100: float
     protein_100: float
     carbs_100: float

@@ -17,7 +17,7 @@ router = APIRouter(prefix="/training", tags=["training"])
 )
 async def log_training_endpoint(training:LogTrainingRequest,current_user:dict=Depends(get_current_user)):
     user_id = current_user['user_id']
-    response = log_training(training,user_id)
+    response = await log_training(training,user_id)
     
     return response
 
@@ -33,7 +33,7 @@ async def log_training_endpoint(training:LogTrainingRequest,current_user:dict=De
 )
 async def create_training_routine_endpoint(routine:TrainingRoutineRequest,current_user: dict = Depends(get_current_user)):
     user_id = current_user['user_id']
-    response = create_training_routine(routine,user_id)
+    response = await create_training_routine(routine,user_id)
     return response
     
 
@@ -55,6 +55,6 @@ async def view_training_endpoint(
 
 ):
     user_id = current_user['user_id']
-    response = view_training(user_id,date_from,date_to)
+    response = await view_training(user_id,date_from,date_to)
     print(response)
     return response
