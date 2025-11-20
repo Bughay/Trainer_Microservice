@@ -53,22 +53,17 @@ async def log_message(user_message,user_id):
 
 system_message= 'you are layne norton and you will answer nutrition and training to the best of your ability'
 
-def answer_questions(user_message,apikey):
+async def answer_questions(user_message,apikey):
     agent = DeepseekChat(system_message,apikey)
     ####RAG RAG RAG good sources######
     ### search search  good sites##
     answer = agent.one_shot(user_message)
     return answer
 
-def add_food_bot():
-    ### here the bot needs to find the food items saved in the users portfolio and to create from it
-    pass
-
-def create_training_routine():
+async def create_message(user_message,user_id):
     pass
 
 
-            
             
             
             
