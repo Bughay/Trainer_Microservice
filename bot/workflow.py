@@ -2,7 +2,7 @@ from .other_agents.extractor import DeepseekExtractor
 from .other_agents.classification_agent import ClassificationAgent
 from .other_agents.deepseek import DeepseekChat
 import os
-from .personal_trainer.prompts import food_extraction_schema,food_example_schema,classification_examples,training_extraction_schema,training_example_schema
+from .personal_trainer.prompts import food_extraction_schema,food_example_schema,log_classification_examples,training_extraction_schema,training_example_schema,training_routine_schema,training_routine_extraction_examples
 from .model import ResponseLogBot
 import sys
 from pathlib import Path
@@ -13,13 +13,14 @@ from training.database import log_training
 from training.model import LogTrainingRequest
 from food.database import log_food
 from food.model import LogFood
+from training.database import create_training_routine
 from pydantic import BaseModel
 api_key = os.getenv("DEEPSEEK_API_KEY")
 
 
 async def log_message(user_message,user_id):
 
-    agent_c = ClassificationAgent(api_key,categories=['food','exercise'],examples=classification_examples)
+    agent_c = ClassificationAgent(api_key,categories=['food','exercise'],examples=log_classification_examples)
     classification_result = await agent_c.classify(user_message)
     if classification_result == 'food':
 
@@ -51,17 +52,26 @@ async def log_message(user_message,user_id):
         return response
 
 
-system_message= 'you are layne norton and you will answer nutrition and training to the best of your ability'
 
 async def answer_questions(user_message,apikey):
+    system_message= 'you are layne norton and you will answer nutrition and training to the best of your ability'
+
     agent = DeepseekChat(system_message,apikey)
     ####RAG RAG RAG good sources######
     ### search search  good sites##
     answer = agent.one_shot(user_message)
     return answer
 
-async def create_message(user_message,user_id):
-    pass
+async def create_training_routine(user_message,user_id):
+    agent_e = DeepseekExtractor(user_message=user_message,
+                            extraction_schema=training_routine_schema,
+                            example_schema = training_routine_extraction_examples,
+                            api_key=api_key)
+    extracted_list = await agent_e.extract()
+    create_training_routine(extracted_list,user_id)
+    return extracted_list
+
+
 
 
             

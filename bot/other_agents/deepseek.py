@@ -23,7 +23,7 @@ class DeepseekChat:
             print('LLM answer')
             print(response.choices[0].message.content)
 
-    async def one_shot(self,user_message,temperature=0.6,max_tokens=4096):
+    async def one_shot(self,user_message,temperature=0.3,max_tokens=4096):
         response = self.client.chat.completions.create(
         model="deepseek-chat",
         messages=[
