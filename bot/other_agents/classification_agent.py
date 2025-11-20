@@ -30,7 +30,7 @@ class ClassificationAgent:
                     3. Examples (for context):  
                         {examples}"""
 
-    def classify(self,user_message):
+    async def classify(self,user_message):
 
 
         client = OpenAI(api_key=os.environ.get('DEEPSEEK_API_KEY'), base_url="https://api.deepseek.com")

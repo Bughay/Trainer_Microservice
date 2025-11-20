@@ -15,7 +15,7 @@ class DeepseekExtractor:
         self.extraction_prompt = """You will be performing extraction of data from the text as a JSON file using the following schema
                     keep note that the key is the variable and the value is the description
                                         """
-    def extract(self):
+    async def extract(self):
         response = self.client.chat.completions.create(
         model="deepseek-chat",
         messages=[

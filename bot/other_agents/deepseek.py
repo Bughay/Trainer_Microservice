@@ -7,7 +7,7 @@ class DeepseekChat:
         self.memory = [
             {"role": "system", "content": self.system_message}
         ]
-    def begin_conversation(self):
+    async def begin_conversation(self):
         while True:
             print('ask your question to deep seek')
             message = input()
@@ -23,7 +23,7 @@ class DeepseekChat:
             print('LLM answer')
             print(response.choices[0].message.content)
 
-    def one_shot(self,user_message,temperature=0.6,max_tokens=4096):
+    async def one_shot(self,user_message,temperature=0.6,max_tokens=4096):
         response = self.client.chat.completions.create(
         model="deepseek-chat",
         messages=[

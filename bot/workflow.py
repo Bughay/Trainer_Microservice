@@ -17,10 +17,10 @@ from pydantic import BaseModel
 api_key = os.getenv("DEEPSEEK_API_KEY")
 
 
-def log_message(user_message,user_id):
+async def log_message(user_message,user_id):
 
     agent_c = ClassificationAgent(api_key,categories=['food','exercise'],examples=classification_examples)
-    classification_result = agent_c.classify(user_message)
+    classification_result = await agent_c.classify(user_message)
     if classification_result == 'food':
 
         extraction_schema = food_extraction_schema
@@ -29,10 +29,10 @@ def log_message(user_message,user_id):
                             extraction_schema=extraction_schema,
                             example_schema = example_schema,
                             api_key=api_key)
-        extracted_list = agent_e.extract()
+        extracted_list = await agent_e.extract()
         for item in extracted_list['foods']:
             food_obj = LogFood(**item)
-            log_food(food_obj,user_id)
+            await log_food(food_obj,user_id)
         response = ResponseLogBot(message='your food has been succesfully added',request_data=extracted_list)
         return response
     elif classification_result == 'exercise':
@@ -42,12 +42,11 @@ def log_message(user_message,user_id):
                             extraction_schema=extraction_schema,
                             example_schema = example_schema,
                             api_key=api_key)
-        extracted_list = agent_e.extract()
-        print(extracted_list)
+        extracted_list = await agent_e.extract()
 
         for item in extracted_list['trainings']:
             training_obj = LogTrainingRequest(**item)
-            log_training(training_obj,user_id)
+            await log_training(training_obj,user_id)
         response = ResponseLogBot(message='your food has been succesfully added',request_data=extracted_list)
         return response
 
