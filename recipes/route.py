@@ -2,13 +2,13 @@ from fastapi import APIRouter, HTTPException, status, Depends
 from typing import List
 from auth.security import get_current_user 
 from .model import ReadRecipeResponse,CreateRecipeRequest,CreateRecipeResponse
-from .database import read_food_items,create_recipe
+from .database import read_food_items,create_recipe,get_recipe
 router = APIRouter(prefix="/recipe", tags=["recipe"])
 
 
 
 @router.get(
-    "/read_recipe",
+    "/read_foods",
     response_model=ReadRecipeResponse,
     status_code = status.HTTP_201_CREATED,
     summary="Create a new food item",
@@ -39,6 +39,19 @@ async def create_recipe_endpoint(recipe:CreateRecipeRequest ,current_user: dict 
     return response
 
 
+@router.get(
+    "/read_recipe",
+    summary="Create a new food item",
+    description="Create a new food item for the database",
+)
+
+
+async def read_recipe_endpoint(current_user: dict = Depends(get_current_user)):
+    user_id = current_user['user_id']
+
+    recipe = await get_recipe(user_id)
+
+    return recipe
     
 
 

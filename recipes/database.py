@@ -79,3 +79,31 @@ async def create_recipe(recipe:CreateRecipeRequest,user_id):
 
     except Exception as e:
         print(f"Error here: {e}")
+
+
+
+
+async def get_recipe(user_id):
+    try:
+
+
+        pool = get_pool()
+        async with pool.acquire() as conn:
+            select_query = """
+            SELECT DISTINCT
+                r.recipe_name,
+                r.instructions
+            FROM   recipes r
+            JOIN   recipe_ingredients ri ON ri.recipe_id = r.recipe_id
+            WHERE  r.user_id = $1;
+            
+            """
+        
+
+
+            data_to_insert=user_id
+            results = await conn.fetch(select_query, data_to_insert)
+            
+            return results
+    except Exception as e:
+        print(f"Error: {e}")   
