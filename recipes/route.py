@@ -8,7 +8,7 @@ router = APIRouter(prefix="/recipe", tags=["recipe"])
 
 
 @router.get(
-    "/recipe/read_recipe",
+    "/read_recipe",
     response_model=ReadRecipeResponse,
     status_code = status.HTTP_201_CREATED,
     summary="Create a new food item",
@@ -21,7 +21,7 @@ async def read_recipe_endpoint(current_user: dict = Depends(get_current_user)):
     return food_items    
 
 @router.post(
-    "/recipe/create_recipe",
+    "/create_recipe",
     response_model= CreateRecipeResponse,
     status_code = status.HTTP_201_CREATED,
     summary="Create a new food item",
