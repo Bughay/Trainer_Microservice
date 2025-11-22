@@ -56,5 +56,4 @@ async def view_training_endpoint(
 ):
     user_id = current_user['user_id']
     response = await view_training(user_id,date_from,date_to)
-    print(response)
     return response

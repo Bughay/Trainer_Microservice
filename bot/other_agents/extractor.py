@@ -45,6 +45,5 @@ class DeepseekExtractor:
             temperature=0,
         )
         extracted_data = json.loads(response.choices[0].message.content)
-        print('we are testing this function', type(extracted_data))
         return extracted_data
     

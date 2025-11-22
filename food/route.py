@@ -17,7 +17,6 @@ async def log_food_endpoint(item:LogFood,current_user: dict = Depends(get_curren
     try:
         user_id = current_user['user_id']
         answer = await log_food(item,user_id)
-        print(answer)
         response = ResponseLogFood(
             food_logged=item,
             food_saved_db=answer

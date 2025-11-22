@@ -128,4 +128,4 @@ async def view_training(user_id,date_from,date_to):
             return results
 
     except Exception as e:
-        print(f"Error: {e}")
+        print(f"Error t: {e}")

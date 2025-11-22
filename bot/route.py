@@ -1,14 +1,14 @@
 from fastapi import APIRouter, HTTPException, status,Depends
 from auth.security import get_current_user 
 from .model import ResponseLogBot,RequestLogBot
-from .workflow import log_message,create_training_routine
+from .workflow import log_message,create_training
 from pydantic import BaseModel
 
 router = APIRouter(prefix="/agent", tags=["bot"])
 
 
 @router.post(
-    "/agent",
+    "/",
     status_code = status.HTTP_201_CREATED,
     response_model=ResponseLogBot,
     summary="bot",
@@ -35,10 +35,7 @@ async def agent_2(
     ):
     user_id = current_user['user_id']
     message = message_request.message
-    answer = await create_training_routine(message,user_id)
+    answer = await create_training(message,user_id)
     return answer
 
 
-
-
-    

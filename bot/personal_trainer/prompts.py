@@ -113,13 +113,16 @@ training_example_schema = """
 """
 
 training_routine_schema ="""
+class TrainingRoutineRequestList(BaseModel):
+    exercise_name:str
+    weight_: int
+    sets_: int
+    reps: int
+    notes: str
+
 class TrainingRoutineRequest(BaseModel):
     training_routine_name:str
     exercise_list: List[TrainingRoutineRequestList]
-    notes:str
-
-class TrainingRoutineResponse(BaseModel):
-    training_routine_name:str
     notes:str
 """
 training_routine_extraction_examples = [
@@ -292,6 +295,98 @@ training_routine_extraction_examples = [
                 }
             ],
             "notes": "Working on pure strength gains"
+        }
+    }
+]
+
+addfood_schema = """
+class AddFood(BaseModel):
+    food_name: str
+    calories_100: float
+    protein_100: float
+    carbs_100: float
+    fats_100: float
+"""
+
+addfood_extraction_examples = [
+    {
+        "user_message": "I want to add grilled chicken breast to my food database. It has 165 calories per 100g, with 31g protein, 0g carbs, and 3.6g fat.",
+        "json_output": {
+            "food_name": "grilled chicken breast",
+            "calories_100": 165.0,
+            "protein_100": 31.0,
+            "carbs_100": 0.0,
+            "fats_100": 3.6
+        }
+    },
+    {
+        "user_message": "Please add cooked brown rice. Nutritional info per 100g: 111 calories, 2.6g protein, 23g carbs, 0.9g fat.",
+        "json_output": {
+            "food_name": "cooked brown rice",
+            "calories_100": 111.0,
+            "protein_100": 2.6,
+            "carbs_100": 23.0,
+            "fats_100": 0.9
+        }
+    },
+    {
+        "user_message": "Add almonds to my food list. Per 100g: 579 calories, 21g protein, 22g carbs, 50g fat.",
+        "json_output": {
+            "food_name": "almonds",
+            "calories_100": 579.0,
+            "protein_100": 21.0,
+            "carbs_100": 22.0,
+            "fats_100": 50.0
+        }
+    },
+    {
+        "user_message": "I'd like to add salmon fillet. Per 100g: 208 calories, 20g protein, 0g carbs, 13g fat.",
+        "json_output": {
+            "food_name": "salmon fillet",
+            "calories_100": 208.0,
+            "protein_100": 20.0,
+            "carbs_100": 0.0,
+            "fats_100": 13.0
+        }
+    },
+    {
+        "user_message": "Please add this food: Greek yogurt. Nutrition per 100g: 59 calories, 10g protein, 3.6g carbs, 0.4g fat.",
+        "json_output": {
+            "food_name": "greek yogurt",
+            "calories_100": 59.0,
+            "protein_100": 10.0,
+            "carbs_100": 3.6,
+            "fats_100": 0.4
+        }
+    },
+    {
+        "user_message": "Add avocado to the database. Per 100g: 160 calories, 2g protein, 9g carbs, 15g fat.",
+        "json_output": {
+            "food_name": "avocado",
+            "calories_100": 160.0,
+            "protein_100": 2.0,
+            "carbs_100": 9.0,
+            "fats_100": 15.0
+        }
+    },
+    {
+        "user_message": "I want to add whey protein shake. Macronutrients per 100g: 405 calories, 78g protein, 6g carbs, 5g fat.",
+        "json_output": {
+            "food_name": "whey protein shake",
+            "calories_100": 405.0,
+            "protein_100": 78.0,
+            "carbs_100": 6.0,
+            "fats_100": 5.0
+        }
+    },
+    {
+        "user_message": "Please add sweet potato to my foods. Per 100g cooked: 86 calories, 1.6g protein, 20g carbs, 0.1g fat.",
+        "json_output": {
+            "food_name": "sweet potato",
+            "calories_100": 86.0,
+            "protein_100": 1.6,
+            "carbs_100": 20.0,
+            "fats_100": 0.1
         }
     }
 ]
