@@ -82,6 +82,7 @@ CREATE TABLE training_routine (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     training_routine_name VARCHAR(255),
+
     notes VARCHAR(255)
 );
 
@@ -94,6 +95,8 @@ CREATE TABLE training (
     exercise_name VARCHAR(255),
     weight_ DECIMAL NOT NULL,
     reps INTEGER NOT NULL,
+    week_no INTEGER,
+    day_no INTEGER,
     notes VARCHAR(255)
 );
 

@@ -5,6 +5,7 @@ from training.route import router as training_router
 from bot.route import router as bot_router
 from auth.route import router as auth_router 
 from bot.route import router as personal_trainer_router
+from recipes.route import router as recipe_router
 from fastapi.middleware.cors import CORSMiddleware
 
 
@@ -37,6 +38,7 @@ app.include_router(training_router)
 app.include_router(bot_router)
 app.include_router(auth_router)
 app.include_router(personal_trainer_router)
+app.include_router(recipe_router)
 
 
 
