@@ -53,16 +53,8 @@ async def log_message(user_message,user_id):
 
 
 
-async def answer_questions(user_message,apikey):
-    system_message= 'you are layne norton and you will answer nutrition and training to the best of your ability'
 
-    agent = DeepseekChat(system_message,apikey)
-    ####RAG RAG RAG good sources######
-    ### search search  good sites##
-    answer = agent.one_shot(user_message)
-    return answer
-
-async def create_training_routine(user_message,user_id):
+async def create_training(user_message,user_id):
     agent_e = DeepseekExtractor(user_message=user_message,
                             extraction_schema=training_routine_schema,
                             example_schema = training_routine_extraction_examples,
