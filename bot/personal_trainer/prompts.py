@@ -390,3 +390,12 @@ addfood_extraction_examples = [
         }
     }
 ]
+
+personal_trainer_agent_classify_example = [
+  { "message": "I just ate 200 g of salmon and a 100g of rice for dinner.", "reply": "log_message" },
+  { "message": "Create a push-day template: bench-press 2 sets 3 reps 100kg, incline DB press 25 kg for 5 sets of 8reps", "reply": "create_training" },
+  { "message": "Add a food template: skinless chicken breast, 165 kcal, 31 g protein, 0 g carbs, 3.6 g fat per 100 g.", "reply": "create_food" },
+  { "message": "Create a food entry: cooked quinoa, 120 kcal, 4.4 g protein, 21 g carbs, 1.9 g fat per 100 g.", "reply": "create_food" },
+  { "message": "Create a food template for avocado: 160 kcal, 2 g protein, 15 g fat.", "reply": "create_food" },
+  { "message": "Today i did 100kg bench for 5 reps and then i squatted 50 kg for 2 sets of 50 reps and ended the day with 12 kg bicep curls for 3x12", "reply": "log_message" }
+]

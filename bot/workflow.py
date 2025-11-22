@@ -86,6 +86,33 @@ async def create_food(user_message,user_id):
     except Exception as e:
         print(f"Error: {e}")
 
+
+
+
+async def personal_trainer_agent(user_message, user_id):
+    agent_c = ClassificationAgent(
+        api_key,
+        categories=['log_message', 'create_training', 'create_food'],
+        examples=personal_trainer_agent_classify_example
+    )
+    
+    result = await agent_c.classify(user_message)
+    print('RESULT: ',result)
+    if result == 'log_message':
+        data = await log_food(user_message, user_id)
+    elif result == 'create_training':
+        data = await create_training(user_message, user_id)
+    elif result == 'create_food':
+        data = await add_food(user_message, user_id)
+    else:
+        data = {}
+        
+    # Wrap in the format FastAPI expects
+    return {
+        "message": f"Action '{result}' completed",
+        "request_data": data
+    }
+
 async def ask_question(user_message,user_id):
     pass
 
