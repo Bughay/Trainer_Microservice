@@ -8,7 +8,7 @@ from typing import Optional
 
 SECRET_KEY = "hsaoiudh0saidh9y7312yt397128yt39"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 20
+ACCESS_TOKEN_EXPIRE_MINUTES = 120
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 security = HTTPBearer()
@@ -37,5 +37,8 @@ def get_current_user(token: str = Depends(security)) -> dict:
         return {"user_id": user_id, "username": user_name}
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid or expired token")
+    
+
+
 
 
