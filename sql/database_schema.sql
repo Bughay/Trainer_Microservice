@@ -1,12 +1,18 @@
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
-    first_name VARCHAR(255) NOT NULL,
-    last_name VARCHAR(255) NOT NULL,
-    date_of_birth DATE NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    gender BOOLEAN,
-    body_weight INTEGER,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    user_name VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    hashed_password VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users_profile(
+    user_id INTEGER PRIMARY KEY REFERENCES users(user_id) ON DELETE CASCADE,
+    date_of_birth DATE,
+    height DECIMAL,
+    weight DECIMAL,
+    is_trainer   BOOLEAN NOT NULL DEFAULT FALSE,
+    is_vip       BOOLEAN NOT NULL DEFAULT FALSE,
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -76,6 +82,7 @@ CREATE TABLE training_routine (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     training_routine_name VARCHAR(255),
+
     notes VARCHAR(255)
 );
 
@@ -86,8 +93,6 @@ CREATE TABLE training (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     exercise_name VARCHAR(255),
-    weight_ DECIMAL NOT NULL,
-    reps INTEGER NOT NULL,
     notes VARCHAR(255)
 );
 

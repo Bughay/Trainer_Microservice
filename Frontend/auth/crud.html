@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Agent chat</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    textarea { width:100%; min-height:100px; margin-bottom:.5rem; }
+    pre { background:#f5f5f5; padding:1rem; white-space:pre-wrap; word-break:break-all; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Send a message to /agent</h2>
+
+    <textarea id="msgInput" placeholder="Type your message here…"></textarea>
+    <button onclick="send()">Send</button>
+
+    <h3>Reply from API</h3>
+    <pre id="reply">(nothing yet)</pre>
+
+    <hr>
+    <button onclick="localStorage.clear(); location.replace('index.html')">Log out</button>
+  </div>
+
+  <script>
+    const token = localStorage.getItem('token');
+    if (!token) location.replace('index.html');   // kick back to login
+
+    async function send() {
+      const body = { message: document.getElementById('msgInput').value.trim() };
+      if (!body.message) return;
+
+      document.getElementById('reply').textContent = 'Waiting…';
+
+      try {
+        const res = await fetch('http://localhost:8000/agent/agent', {
+          method : 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(body)
+        });
+
+        if (!res.ok) throw new Error((await res.json()).detail || 'Request failed');
+
+        const data = await res.json();   // ResponseLogBot
+        document.getElementById('reply').textContent = JSON.stringify(data, null, 2);
+      } catch (err) {
+        document.getElementById('reply').textContent = 'Error: ' + err.message;
+      }
+    }
+  </script>
+</body>
+</html>
