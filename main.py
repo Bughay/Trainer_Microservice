@@ -3,7 +3,7 @@ from database import *
 from food.route import router as food_router
 from training.route import router as training_router
 from auth.route import router as auth_router 
-# from bot.route import router as personal_trainer_router
+from bot.route import router as bot_router
 from recipes.route import router as recipe_router
 from fastapi.middleware.cors import CORSMiddleware
 from agent.route import router as agent_router
@@ -34,9 +34,8 @@ async def shutdown():
 
 app.include_router(food_router)
 app.include_router(training_router)
-# app.include_router(bot_router)
+app.include_router(bot_router)
 app.include_router(auth_router)
-# app.include_router(personal_trainer_router)
 app.include_router(recipe_router)
 app.include_router(agent_router)
 
