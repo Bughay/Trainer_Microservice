@@ -1,3 +1,4 @@
+
 from openai import OpenAI
 
 class DeepseekChat:
@@ -7,7 +8,7 @@ class DeepseekChat:
         self.memory = [
             {"role": "system", "content": self.system_message}
         ]
-    async def begin_conversation(self):
+    def begin_conversation(self):
         while True:
             print('ask your question to deep seek')
             message = input()
@@ -23,7 +24,7 @@ class DeepseekChat:
             print('LLM answer')
             print(response.choices[0].message.content)
 
-    async def one_shot(self,user_message,temperature=0.3,max_tokens=4096):
+    def one_shot(self,user_message,temperature=0.6,max_tokens=4096):
         response = self.client.chat.completions.create(
         model="deepseek-chat",
         messages=[
@@ -35,3 +36,29 @@ class DeepseekChat:
         max_tokens = max_tokens
     )
         return response.choices[0].message.content
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
+        

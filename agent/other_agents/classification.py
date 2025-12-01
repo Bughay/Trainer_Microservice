@@ -8,7 +8,7 @@ load_dotenv()
 api_key = os.getenv('DEEPSEEK_APIKEY')
 
 
-class ClassificationAgent:
+class DeepseekClassification:
     def __init__(self,api_key,
                  categories,
                  examples):

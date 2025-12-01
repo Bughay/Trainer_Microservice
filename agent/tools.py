@@ -1,11 +1,12 @@
-from .other_agents.extractor import DeepseekExtractor
-from .other_agents.classification_agent import ClassificationAgent
-from .other_agents.deepseek import DeepseekChat
+from .other_agents.deep_seek_extraction import DeepseekExtractor
+from .other_agents.classification import DeepseekClassification
+from .other_agents.chat_template import DeepseekChat
 import os
-from .personal_trainer.prompts import *
+from .prompts import *
 from .model import ResponseLogBot
 import sys
 from pathlib import Path
+from functools import partial
 
 project_root = Path(__file__).resolve().parents[2]          
 sys.path.insert(0, str(project_root))                       
@@ -18,10 +19,45 @@ from pydantic import BaseModel
 api_key = os.getenv("DEEPSEEK_API_KEY")
 
 
+
+function_schemas = {
+    "log_message": {
+        "description": "Log daily food intake or exercise training...",
+        "parameters": {
+            "user_message": {
+                "type": "string",
+                "description": "The user's message describing what they ate...",
+                "required": True  # ← Add this if needed
+            }
+        }
+    },
+    "create_training": {
+        "description": "Create a new training routine template...",
+        "parameters": {
+            "user_message": {
+                "type": "string", 
+                "description": "The user's message describing the training...",
+                "required": True
+            }
+        }
+    },
+    "create_food": {
+        "description": "Create a new food item template...",
+        "parameters": {
+            "user_message": {
+                "type": "string",
+                "description": "The user's message describing the food item...",
+                "required": True
+            }
+        }
+    }
+}
+
+
 async def log_message(user_message,user_id):
     try:
 
-        agent_c = ClassificationAgent(api_key,categories=['food','exercise'],examples=log_classification_examples)
+        agent_c = DeepseekClassification(api_key,categories=['food','exercise'],examples=log_classification_examples)
         classification_result = await agent_c.classify(user_message)
         if classification_result == 'food':
 
@@ -88,40 +124,22 @@ async def create_food(user_message,user_id):
 
 
 
+def create_wrapped_function_map(user_id: str):
+    async def _log(**kw):
+        return await log_message(kw["user_message"], user_id)
 
-async def personal_trainer_agent(user_message, user_id):
-    agent_c = ClassificationAgent(
-        api_key,
-        categories=['log_message', 'create_training', 'create_food'],
-        examples=personal_trainer_agent_classify_example
-    )
-    
-    result = await agent_c.classify(user_message)
-    print('RESULT: ',result)
-    if result == 'log_message':
-        data = await log_food(user_message, user_id)
-    elif result == 'create_training':
-        data = await create_training(user_message, user_id)
-    elif result == 'create_food':
-        data = await add_food(user_message, user_id)
-    else:
-        data = {}
-        
-    # Wrap in the format FastAPI expects
+    async def _training(**kw):
+        return await create_training(kw["user_message"], user_id)
+
+    async def _food(**kw):
+        return await create_food(kw["user_message"], user_id)
+
+    async def _done(**_):
+        return "Task completed"
+
     return {
-        "message": f"Action '{result}' completed",
-        "request_data": data
+        "log_message":     _log,
+        "create_training": _training,
+        "create_food":     _food,
+        "task_complete":   _done,
     }
-
-async def ask_question(user_message,user_id):
-    pass
-
-async def create_recipe():
-    pass
-
-
-
-
-            
-            
-            

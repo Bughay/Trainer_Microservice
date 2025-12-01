@@ -1,4 +1,5 @@
 from openai import OpenAI
+from openai import AsyncOpenAI
 from dotenv import load_dotenv
 import os
 import json
@@ -7,7 +8,7 @@ load_dotenv()
 api_key = os.getenv("DEEPSEEK_API_KEY")
 class DeepseekExtractor:
     def __init__(self,user_message,extraction_schema,example_schema,api_key):
-        self.client = OpenAI(api_key=api_key, base_url="https://api.deepseek.com")
+        self.client = AsyncOpenAI(api_key=api_key, base_url="https://api.deepseek.com")
         self.user_message = user_message
         self.extraction_schema = extraction_schema
         self.example_schema = example_schema
@@ -16,7 +17,7 @@ class DeepseekExtractor:
                     keep note that the key is the variable and the value is the description
                                         """
     async def extract(self):
-        response = self.client.chat.completions.create(
+        response = await self.client.chat.completions.create(
         model="deepseek-chat",
         messages=[
                 {
@@ -45,5 +46,11 @@ class DeepseekExtractor:
             temperature=0,
         )
         extracted_data = json.loads(response.choices[0].message.content)
+        print('we are testing this function', type(extracted_data))
         return extracted_data
     
+
+
+
+    
+

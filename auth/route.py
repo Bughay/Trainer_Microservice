@@ -1,9 +1,9 @@
-from fastapi import APIRouter, HTTPException, status,Depends
+from fastapi import APIRouter, HTTPException, status
 import os
 from dotenv import load_dotenv
 import psycopg2
 from .model import CreateUserRequest,CreateUserResponse,UserResponse,LoginRequest,LoginResponse
-from .security import create_jwt_token,get_current_user,verify_password,get_password_hash
+from .security import create_jwt_token,verify_password,get_password_hash
 load_dotenv()
 
 database_url = os.getenv('DATABASE_URL')
@@ -17,7 +17,7 @@ router = APIRouter(prefix="/auth", tags=["authentication"])
     description="Create a new user account"
 )
 async def registration_endpoint(user:CreateUserRequest):
-    conn = None          # ← add
+    conn = None         
     cur  = None 
     try:
         conn = psycopg2.connect(database_url)
